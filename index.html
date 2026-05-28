@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Album Panini · FIFA World Cup 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --red:#E8312A;--blue:#1B4FBF;--green:#2AAD4A;--yellow:#F5C800;--purple:#7B2FBE;--orange:#F07020;
+  --bg:#F2F0EB;--white:#FFFFFF;--dark:#1A1A1A;--muted:#888;--radius:10px;
+}
+body{font-family:'Archivo',sans-serif;background:var(--bg);color:var(--dark);min-height:100vh;padding-bottom:3rem}
+
+/* LOGIN */
+.login-wrap{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  background:var(--dark);padding:2rem;
+}
+.login-box{
+  background:var(--bg);border-radius:16px;padding:2.5rem 2rem;width:100%;max-width:400px;
+  border-top:8px solid var(--yellow);
+}
+.login-blocks{display:flex;height:6px;border-radius:4px;overflow:hidden;margin-bottom:1.5rem}
+.lb{flex:1}
+.lb1{background:var(--red)}.lb2{background:var(--blue)}.lb3{background:var(--green)}
+.lb4{background:var(--yellow)}.lb5{background:var(--purple)}.lb6{background:var(--orange)}
+.login-trophy{font-size:3rem;text-align:center;margin-bottom:.5rem}
+.login-title{font-family:'Archivo Black',sans-serif;font-size:1.6rem;text-align:center;line-height:1;margin-bottom:.25rem}
+.login-title span{color:var(--yellow)}
+.login-sub{font-size:12px;color:var(--muted);text-align:center;margin-bottom:2rem}
+.login-label{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:.5rem;display:block}
+.user-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1rem}
+.user-btn{
+  padding:.85rem .5rem;border:2px solid var(--dark);border-radius:var(--radius);
+  background:var(--white);font-family:'Archivo Black',sans-serif;font-size:.95rem;
+  cursor:pointer;transition:all .15s;text-align:center;
+}
+.user-btn:hover{background:var(--dark);color:var(--yellow);transform:translateY(-2px);box-shadow:3px 3px 0 #000}
+.user-btn .user-emoji{font-size:1.5rem;display:block;margin-bottom:.25rem}
+.new-user-wrap{margin-top:.75rem}
+.new-user-input{
+  width:100%;height:42px;padding:0 14px;border:2px solid var(--dark);border-radius:var(--radius);
+  font-family:'Archivo',sans-serif;font-size:14px;color:var(--dark);background:var(--white);outline:none;
+  margin-bottom:.5rem;
+}
+.new-user-input:focus{border-color:var(--blue)}
+.new-user-btn{
+  width:100%;height:42px;background:var(--dark);color:var(--yellow);border:2px solid var(--dark);
+  border-radius:var(--radius);font-family:'Archivo Black',sans-serif;font-size:14px;cursor:pointer;
+  transition:all .15s;
+}
+.new-user-btn:hover{background:#333}
+
+/* HEADER */
+header{background:var(--dark);position:sticky;top:0;z-index:100;box-shadow:0 4px 20px rgba(0,0,0,0.3)}
+.header-blocks{display:flex;height:8px}
+.hb{flex:1}
+.hb1{background:var(--red)}.hb2{background:var(--blue)}.hb3{background:var(--green)}
+.hb4{background:var(--yellow)}.hb5{background:var(--purple)}.hb6{background:var(--orange)}
+.hb7{background:var(--red)}.hb8{background:var(--blue)}
+.header-inner{padding:.85rem 1.5rem;display:flex;align-items:center;gap:1.25rem;flex-wrap:wrap}
+.trophy{font-size:1.8rem;line-height:1}
+.title-top{font-size:10px;letter-spacing:2px;color:#999;text-transform:uppercase;font-weight:500}
+.title-main{font-family:'Archivo Black',sans-serif;font-size:1.3rem;color:#fff;line-height:1}
+.title-main span{color:var(--yellow)}
+.title-sub{font-size:11px;color:#777;margin-top:2px;display:flex;align-items:center;gap:5px}
+.sync-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#555;transition:background .3s;flex-shrink:0}
+.sync-dot.ok{background:var(--green)}.sync-dot.saving{background:var(--yellow)}.sync-dot.err{background:var(--red)}
+.user-tag{
+  margin-left:auto;background:#222;border:1px solid #333;border-radius:20px;
+  padding:.3rem .85rem;display:flex;align-items:center;gap:.5rem;cursor:pointer;transition:background .15s;
+}
+.user-tag:hover{background:#2a2a2a}
+.user-tag-name{font-family:'Archivo Black',sans-serif;font-size:.85rem;color:var(--yellow)}
+.user-tag-lbl{font-size:10px;color:#666}
+.header-stats{display:flex;gap:.85rem;align-items:center;flex-wrap:wrap}
+.hstat{text-align:center}
+.hstat-num{font-family:'Archivo Black',sans-serif;font-size:1.3rem;color:var(--yellow);line-height:1}
+.hstat-lbl{font-size:9px;color:#777;text-transform:uppercase;letter-spacing:.8px}
+.hdiv{width:1px;height:28px;background:#333}
+.prog-outer{background:#333;border-radius:4px;overflow:hidden;height:5px;width:120px;margin-top:4px}
+.prog-inner{height:100%;background:linear-gradient(90deg,var(--green),var(--yellow));border-radius:4px;transition:width .5s}
+.prog-pct{font-size:10px;color:#777;text-align:right;margin-top:2px}
+
+.controls{
+  background:var(--white);border-bottom:2px solid var(--dark);
+  padding:.75rem 1.5rem;display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;
+  position:sticky;top:70px;z-index:99;
+}
+.search{
+  flex:1;min-width:160px;height:38px;padding:0 14px;
+  background:var(--bg);border:2px solid var(--dark);border-radius:var(--radius);
+  font-family:'Archivo',sans-serif;font-size:14px;color:var(--dark);outline:none;transition:border-color .2s;
+}
+.search:focus{border-color:var(--blue)}
+.search::placeholder{color:var(--muted)}
+.fbtn{
+  height:38px;padding:0 14px;border:2px solid var(--dark);border-radius:var(--radius);
+  background:var(--white);color:var(--dark);font-family:'Archivo',sans-serif;
+  font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;white-space:nowrap;
+}
+.fbtn:hover{background:var(--bg)}
+.fbtn.active{background:var(--dark);color:var(--yellow)}
+.gbtn{
+  height:32px;padding:0 10px;border:2px solid var(--dark);border-radius:6px;
+  background:var(--white);font-family:'Archivo Black',sans-serif;font-size:.75rem;
+  cursor:pointer;transition:all .15s;flex-shrink:0;
+}
+.gbtn:hover{background:var(--dark);color:var(--white)}
+.gbtn.active{background:var(--blue);color:var(--white);border-color:var(--blue)}
+.group-header{
+  grid-column:1/-1;
+  font-family:'Archivo Black',sans-serif;font-size:1.1rem;
+  background:var(--dark);color:var(--yellow);
+  padding:.5rem 1rem;border-radius:var(--radius);
+  letter-spacing:1px;
+}
+.rbtn{
+  height:38px;padding:0 14px;border:2px solid var(--red);border-radius:var(--radius);
+  background:var(--white);color:var(--red);font-family:'Archivo',sans-serif;
+  font-size:12px;font-weight:600;cursor:pointer;margin-left:auto;transition:all .15s;
+}
+.rbtn:hover{background:#fff0f0}
+
+.grid{padding:1.25rem 1.5rem;display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:10px}
+.loading{grid-column:1/-1;text-align:center;padding:4rem;color:var(--muted);font-size:14px}
+.spinner{display:inline-block;width:24px;height:24px;border:3px solid #ddd;border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite;margin-bottom:1rem}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.card{
+  background:var(--white);border:2px solid var(--dark);border-radius:var(--radius);
+  padding:.75rem;position:relative;overflow:hidden;transition:transform .15s,box-shadow .15s;
+}
+.card:hover{transform:translateY(-2px);box-shadow:3px 3px 0 var(--dark)}
+.card-accent{position:absolute;top:0;left:0;right:0;height:5px;background:var(--cc,var(--blue))}
+.card.complete{background:#f0fdf4;border-color:var(--green)}
+.card.complete .card-accent{background:var(--green)}
+.card.complete::after{content:'100%';position:absolute;top:9px;right:10px;font-family:'Archivo Black',sans-serif;font-size:11px;color:var(--green)}
+.card-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:2px;padding-top:6px}
+.card-code{font-family:'Archivo Black',sans-serif;font-size:1.1rem;line-height:1}
+.card-cnt{font-size:11px;color:var(--muted);font-weight:600}
+.card-name{font-size:10px;color:var(--muted);margin-bottom:6px}
+.mbar{height:3px;background:#eee;border-radius:2px;margin-bottom:8px;overflow:hidden}
+.mfill{height:100%;background:var(--cc,var(--blue));border-radius:2px;transition:width .3s}
+.card.complete .mfill{background:var(--green)}
+.stickers{display:grid;grid-template-columns:repeat(5,1fr);gap:3px}
+.stk{
+  min-height:22px;height:22px;border-radius:4px;background:#f0f0f0;border:1.5px solid #ddd;
+  cursor:pointer;transition:background .1s,transform .1s;display:flex;align-items:center;
+  justify-content:center;font-size:9px;font-weight:600;color:#aaa;user-select:none;
+}
+.stk:active{transform:scale(.88)}
+.stk.have{background:var(--cc,var(--blue));border-color:var(--cc,var(--blue));color:rgba(255,255,255,0.8)}
+.card.complete .stk.have{background:var(--green);border-color:var(--green)}
+.no-results{grid-column:1/-1;text-align:center;color:var(--muted);padding:3rem;font-size:14px}
+</style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div id="login-screen" class="login-wrap">
+  <div class="login-box">
+    <div class="login-blocks">
+      <div class="lb lb1"></div><div class="lb lb2"></div><div class="lb lb3"></div>
+      <div class="lb lb4"></div><div class="lb lb5"></div><div class="lb lb6"></div>
+    </div>
+    <div class="login-trophy">🏆</div>
+    <div class="login-title">FIFA WORLD CUP <span>2026™</span></div>
+    <div class="login-sub">Album Panini · Elige tu perfil</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem">
+      <span class="login-label" style="margin-bottom:0">Quien eres?</span>
+      <span style="display:flex;align-items:center;gap:8px">
+        <span id="user-count" style="font-size:11px;color:var(--muted)"></span>
+        <button onclick="refreshUsers()" style="background:transparent;border:1.5px solid var(--dark);border-radius:6px;padding:3px 8px;font-size:11px;cursor:pointer;font-family:'Archivo',sans-serif">↻ Actualizar</button>
+      </span>
+    </div>
+    <div class="user-grid" id="user-grid"></div>
+    <div class="new-user-wrap">
+      <input class="new-user-input" id="new-name" placeholder="Otro nombre..." maxlength="20">
+      <button class="new-user-btn" onclick="enterWithName()">Entrar al album</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- PIN SCREEN -->
+<div id="pin-screen" class="login-wrap" style="display:none">
+  <div class="login-box">
+    <div class="login-blocks">
+      <div class="lb lb1"></div><div class="lb lb2"></div><div class="lb lb3"></div>
+      <div class="lb lb4"></div><div class="lb lb5"></div><div class="lb lb6"></div>
+    </div>
+    <div class="login-trophy">🔒</div>
+    <div class="login-title">Album de <span id="pin-username">-</span></div>
+    <div class="login-sub" style="margin-bottom:1.5rem">Ingresa tu PIN de 4 digitos</div>
+    <div id="pin-dots" style="display:flex;justify-content:center;gap:12px;margin-bottom:1.25rem">
+      <div class="pin-dot"></div><div class="pin-dot"></div>
+      <div class="pin-dot"></div><div class="pin-dot"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%;margin:0 auto">
+      <button class="pin-btn" onclick="pinPress(1)">1</button>
+      <button class="pin-btn" onclick="pinPress(2)">2</button>
+      <button class="pin-btn" onclick="pinPress(3)">3</button>
+      <button class="pin-btn" onclick="pinPress(4)">4</button>
+      <button class="pin-btn" onclick="pinPress(5)">5</button>
+      <button class="pin-btn" onclick="pinPress(6)">6</button>
+      <button class="pin-btn" onclick="pinPress(7)">7</button>
+      <button class="pin-btn" onclick="pinPress(8)">8</button>
+      <button class="pin-btn" onclick="pinPress(9)">9</button>
+      <button class="pin-btn pin-clear" onclick="pinClear()">✕</button>
+      <button class="pin-btn" onclick="pinPress(0)">0</button>
+      <button class="pin-btn pin-back" onclick="pinBack()">⌫</button>
+    </div>
+    <div id="pin-error" style="color:var(--red);font-size:12px;text-align:center;margin-top:.75rem;min-height:18px"></div>
+    <button class="new-user-btn" style="margin-top:.75rem" onclick="backToUsers()">← Volver</button>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app" style="display:none">
+  <header>
+    <div class="header-blocks">
+      <div class="hb hb1"></div><div class="hb hb2"></div><div class="hb hb3"></div><div class="hb hb4"></div>
+      <div class="hb hb5"></div><div class="hb hb6"></div><div class="hb hb7"></div><div class="hb hb8"></div>
+    </div>
+    <div class="header-inner">
+      <div class="trophy">🏆</div>
+      <div>
+        <div class="title-top">Official Sticker Collection · Panini</div>
+        <div class="title-main">FIFA WORLD CUP <span>2026™</span></div>
+        <div class="title-sub"><span class="sync-dot" id="sync-dot"></span><span id="sync-txt">Conectando...</span></div>
+      </div>
+      <div class="user-tag" onclick="changeUser()" title="Cambiar usuario">
+        <div>
+          <div class="user-tag-lbl">Album de</div>
+          <div class="user-tag-name" id="user-display">-</div>
+        </div>
+        <span style="color:#555;font-size:12px">⇄</span></div>
+      <div class="user-tag" onclick="setPinForCurrentUser()" title="Configurar PIN" style="background:#1a1a2e;border-color:#2a2a5a"><span style="font-size:14px">🔒</span><span style="font-size:10px;color:#888">PIN</span></div>
+      <div class="user-tag" onclick="openIntercambios()" title="Ver intercambios" style="background:#0d1f3c;border-color:#1a3a6b"><span style="font-size:14px">🔄</span><span style="font-size:10px;color:#888">Cambios</span>
+      </div>
+      <div class="user-tag" onclick="compartirRepetidas()" title="Compartir repetidas" style="background:#0d2b1a;border-color:#1a5a2a"><span style="font-size:14px">📤</span><span style="font-size:10px;color:#888">Repetidas</span>
+      </div>
+      <div class="user-tag" onclick="exportarFaltantes()" title="Ver faltantes" style="background:#2b1a00;border-color:#5a3a00"><span style="font-size:14px">📋</span><span style="font-size:10px;color:#888">Faltan</span>
+      </div>
+      <div class="header-stats">
+        <div class="hstat"><div class="hstat-num" id="s-tengo">0</div><div class="hstat-lbl">Tengo</div></div>
+        <div class="hdiv"></div>
+        <div class="hstat"><div class="hstat-num" id="s-faltan" style="color:var(--red)">993</div><div class="hstat-lbl">Faltan</div></div>
+      <div class="hdiv"></div>
+      <div class="hstat"><div class="hstat-num" id="s-reps" style="color:var(--orange)">0</div><div class="hstat-lbl">Repetidas</div></div>
+        <div class="hdiv"></div>
+        <div class="hstat"><div class="hstat-num" id="s-paises">0</div><div class="hstat-lbl">Completas</div></div>
+        <div class="hdiv"></div>
+        <div class="hstat">
+          <div class="prog-outer"><div class="prog-inner" id="prog-fill" style="width:0%"></div></div>
+          <div class="prog-pct" id="prog-txt">0 / 993 · 0%</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="controls">
+    <input class="search" id="search" placeholder="Buscar seleccion (ARG, Brasil, MEX...)" oninput="renderGrid()">
+    <button class="fbtn active" id="f-all" onclick="setFilter('all')">Todas</button>
+    <button class="fbtn" id="f-inc" onclick="setFilter('inc')">Incompletas</button>
+    <button class="fbtn" id="f-com" onclick="setFilter('com')">Completas</button>
+    <button class="fbtn" id="f-grp" onclick="setFilter('grp')">Grupos</button>
+    <button class="fbtn" id="f-az" onclick="toggleSort()">A→Z</button>
+    <button class="rbtn" onclick="confirmReset()">Reiniciar</button>
+  </div>
+
+
+  <div style="background:var(--dark);color:#aaa;font-size:12px;text-align:center;padding:.5rem 1rem;border-bottom:1px solid #333">
+    💡 <b style="color:var(--yellow)">Click derecho</b> en PC o <b style="color:var(--yellow)">mantén presionado</b> en celular para marcar una figurita como repetida
+  </div>
+
+  <!-- Modal faltantes -->
+  <div id="modal-faltan" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;align-items:center;justify-content:center;padding:1rem">
+    <div style="background:var(--bg);border-radius:16px;width:100%;max-width:480px;max-height:80vh;display:flex;flex-direction:column;border-top:6px solid var(--orange)">
+      <div style="padding:1rem 1.25rem;border-bottom:1px solid #ddd;display:flex;align-items:center;justify-content:space-between">
+        <span style="font-family:'Archivo Black',sans-serif;font-size:1.1rem">📋 Me Faltan</span>
+        <button onclick="document.getElementById('modal-faltan').style.display='none'" style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--muted)">✕</button>
+      </div>
+      <textarea id="faltan-text" readonly style="flex:1;padding:1rem;font-family:monospace;font-size:13px;border:none;resize:none;background:var(--white);min-height:200px;outline:none"></textarea>
+      <div style="padding:.75rem 1.25rem;display:flex;gap:.75rem">
+        <button onclick="copiarFaltantes()" id="btn-copiar-faltan" style="flex:1;height:42px;background:var(--dark);color:var(--yellow);border:2px solid var(--dark);border-radius:8px;font-family:'Archivo Black',sans-serif;font-size:.9rem;cursor:pointer">📋 Copiar</button>
+        <button onclick="document.getElementById('modal-faltan').style.display='none'" style="flex:1;height:42px;background:var(--white);border:2px solid var(--dark);border-radius:8px;font-family:'Archivo',sans-serif;font-size:.9rem;cursor:pointer">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal compartir repetidas -->
+  <div id="modal-reps" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;align-items:center;justify-content:center;padding:1rem">
+    <div style="background:var(--bg);border-radius:16px;width:100%;max-width:480px;max-height:80vh;display:flex;flex-direction:column;border-top:6px solid var(--green)">
+      <div style="padding:1rem 1.25rem;border-bottom:1px solid #ddd;display:flex;align-items:center;justify-content:space-between">
+        <span style="font-family:'Archivo Black',sans-serif;font-size:1.1rem">📤 Mis Repetidas</span>
+        <button onclick="document.getElementById('modal-reps').style.display='none'" style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--muted)">✕</button>
+      </div>
+      <textarea id="reps-text" readonly style="flex:1;padding:1rem;font-family:monospace;font-size:13px;border:none;resize:none;background:var(--white);min-height:200px;outline:none"></textarea>
+      <div style="padding:.75rem 1.25rem;display:flex;gap:.75rem">
+        <button onclick="copiarRepetidas()" id="btn-copiar" style="flex:1;height:42px;background:var(--dark);color:var(--yellow);border:2px solid var(--dark);border-radius:8px;font-family:'Archivo Black',sans-serif;font-size:.9rem;cursor:pointer">📋 Copiar</button>
+        <button onclick="document.getElementById('modal-reps').style.display='none'" style="flex:1;height:42px;background:var(--white);border:2px solid var(--dark);border-radius:8px;font-family:'Archivo',sans-serif;font-size:.9rem;cursor:pointer">Cerrar</button>
+      </div>
+    </div>
+  </div>
+  <div class="grid" id="grid">
+    <div class="loading"><div class="spinner"></div><br>Cargando...</div>
+  </div>
+
+  <!-- INTERCAMBIOS -->
+  <div class="inter-screen" id="inter-screen">
+    <button class="inter-back" onclick="closeIntercambios()">← Volver al album</button>
+    <div id="inter-content"></div>
+  </div>
+</div>
+
+<script>
+const DB_BASE = 'https://album-mundial-2026-86dbc-default-rtdb.firebaseio.com';
+const PALETTE = ['#E8312A','#1B4FBF','#2AAD4A','#c8a000','#7B2FBE','#F07020'];
+const EMOJIS  = ['⚽','🥅','🏟️','🥇','🎯','🌟','🔥','💪'];
+const TEAMS = [
+  {code:'MEX',name:'Mexico',n:20,page:8,group:'A'},
+  {code:'RSA',name:'Sudafrica',n:20,page:10,group:'A'},
+  {code:'KOR',name:'Corea del Sur',n:20,page:12,group:'A'},
+  {code:'CZE',name:'Chequia',n:20,page:14,group:'A'},
+  {code:'CAN',name:'Canada',n:20,page:16,group:'B'},
+  {code:'BIH',name:'Bosnia',n:20,page:18,group:'B'},
+  {code:'QAT',name:'Qatar',n:20,page:20,group:'B'},
+  {code:'SUI',name:'Suiza',n:20,page:22,group:'B'},
+  {code:'BRA',name:'Brasil',n:20,page:24,group:'C'},
+  {code:'MAR',name:'Marruecos',n:20,page:26,group:'C'},
+  {code:'HAI',name:'Haiti',n:20,page:28,group:'C'},
+  {code:'SCO',name:'Escocia',n:20,page:30,group:'C'},
+  {code:'USA',name:'EE.UU.',n:20,page:32,group:'D'},
+  {code:'PAR',name:'Paraguay',n:20,page:34,group:'D'},
+  {code:'AUS',name:'Australia',n:20,page:36,group:'D'},
+  {code:'TUR',name:'Turquia',n:20,page:38,group:'D'},
+  {code:'GER',name:'Alemania',n:20,page:40,group:'E'},
+  {code:'CUW',name:'Curazao',n:20,page:42,group:'E'},
+  {code:'CIV',name:'Costa Marfil',n:20,page:44,group:'E'},
+  {code:'ECU',name:'Ecuador',n:20,page:46,group:'E'},
+  {code:'NED',name:'Paises Bajos',n:20,page:48,group:'F'},
+  {code:'JPN',name:'Japon',n:20,page:50,group:'F'},
+  {code:'SWE',name:'Suecia',n:20,page:52,group:'F'},
+  {code:'TUN',name:'Tunez',n:20,page:54,group:'F'},
+  {code:'BEL',name:'Belgica',n:20,page:58,group:'G'},
+  {code:'EGY',name:'Egipto',n:20,page:60,group:'G'},
+  {code:'IRN',name:'Iran',n:20,page:62,group:'G'},
+  {code:'NZL',name:'Nueva Zelanda',n:20,page:64,group:'G'},
+  {code:'ESP',name:'Espana',n:20,page:66,group:'H'},
+  {code:'CPV',name:'Cabo Verde',n:20,page:68,group:'H'},
+  {code:'KSA',name:'Arabia Saudita',n:20,page:70,group:'H'},
+  {code:'URU',name:'Uruguay',n:20,page:72,group:'H'},
+  {code:'FRA',name:'Francia',n:20,page:74,group:'I'},
+  {code:'SEN',name:'Senegal',n:20,page:76,group:'I'},
+  {code:'IRQ',name:'Irak',n:20,page:78,group:'I'},
+  {code:'NOR',name:'Noruega',n:20,page:80,group:'I'},
+  {code:'ARG',name:'Argentina',n:20,page:82,group:'J'},
+  {code:'ALG',name:'Argelia',n:20,page:84,group:'J'},
+  {code:'AUT',name:'Austria',n:20,page:86,group:'J'},
+  {code:'JOR',name:'Jordania',n:20,page:88,group:'J'},
+  {code:'POR',name:'Portugal',n:20,page:90,group:'K'},
+  {code:'COD',name:'Congo DR',n:20,page:92,group:'K'},
+  {code:'UZB',name:'Uzbekistan',n:20,page:94,group:'K'},
+  {code:'COL',name:'Colombia',n:20,page:96,group:'K'},
+  {code:'ENG',name:'Inglaterra',n:20,page:98,group:'L'},
+  {code:'CRO',name:'Croacia',n:20,page:100,group:'L'},
+  {code:'GHA',name:'Ghana',n:20,page:102,group:'L'},
+  {code:'PAN',name:'Panama',n:20,page:104,group:'L'},
+  {code:'CC',name:'Coca-Cola Special',n:14,color:'#E8312A'},
+  {code:'FWC',name:'FIFA World Cup',n:19,color:'#1B4FBF'},
+];
+const TOTAL = TEAMS.reduce((a,t)=>a+t.n,0);
+
+let state={}, reps={}, filter='all', sortAZ=false, currentUser='', saveTimer=null;
+let longPressTimer=null;
+
+// ── LOGIN ──────────────────────────────────────────────────────────────────
+
+async function loadUsers() {
+  try {
+    const res = await fetch(`${DB_BASE}/users.json`);
+    const data = await res.json();
+    return data ? Object.keys(data) : [];
+  } catch(e){ return []; }
+}
+
+let pinTarget = '', pinValue = '', pinMode = ''; // 'verify' o 'set'
+
+let loginRefreshTimer = null;
+
+async function initLogin() {
+  clearInterval(loginRefreshTimer);
+  await refreshUsers();
+  loginRefreshTimer = setInterval(refreshUsers, 5000);
+}
+
+async function refreshUsers() {
+  const users = await loadUsers();
+  const grid = document.getElementById('user-grid');
+  const count = document.getElementById('user-count');
+  if(count) count.textContent = users.length ? `${users.length} jugador${users.length>1?'es':''}` : '';
+  grid.innerHTML = users.map((u,i)=>
+    `<button class="user-btn" onclick="selectUser('${u}')">
+      <span class="user-emoji">${EMOJIS[i%EMOJIS.length]}</span>${u}
+    </button>`
+  ).join('');
+  if(!users.length) grid.innerHTML = '<p style="grid-column:1/-1;font-size:13px;color:var(--muted);text-align:center">Se el primero en entrar!</p>';
+}
+
+async function selectUser(name) {
+  // Verificar si tiene PIN
+  try {
+    const res = await fetch(`${DB_BASE}/users/${encodeURIComponent(name)}/pin.json`);
+    const pin = await res.json();
+    if(pin) {
+      showPin(name, 'verify');
+    } else {
+      enterAs(name);
+    }
+  } catch(e) { enterAs(name); }
+}
+
+function showPin(name, mode) {
+  pinTarget = name; pinValue = ''; pinMode = mode;
+  document.getElementById('pin-username').textContent = name;
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('pin-screen').style.display = 'flex';
+  document.getElementById('pin-error').textContent = '';
+  updatePinDots();
+}
+
+function updatePinDots() {
+  document.querySelectorAll('.pin-dot').forEach((d,i)=>{
+    d.classList.toggle('filled', i < pinValue.length);
+  });
+}
+
+function pinPress(n) {
+  if(pinValue.length >= 4) return;
+  pinValue += n;
+  updatePinDots();
+  if(pinValue.length === 4) setTimeout(checkPin, 200);
+}
+
+function pinBack() { pinValue = pinValue.slice(0,-1); updatePinDots(); }
+function pinClear() { pinValue = ''; updatePinDots(); }
+
+async function checkPin() {
+  if(pinMode === 'verify') {
+    const res = await fetch(`${DB_BASE}/users/${encodeURIComponent(pinTarget)}/pin.json`);
+    const saved = await res.json();
+    if(String(saved) === pinValue) {
+      document.getElementById('pin-screen').style.display = 'none';
+      enterAs(pinTarget);
+    } else {
+      document.getElementById('pin-error').textContent = 'PIN incorrecto, intenta de nuevo';
+      pinValue = ''; updatePinDots();
+    }
+  } else if(pinMode === 'set') {
+    await fetch(`${DB_BASE}/users/${encodeURIComponent(currentUser)}/pin.json`,
+      {method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify(pinValue)});
+    document.getElementById('pin-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    alert('PIN guardado!');
+  }
+}
+
+function backToUsers() {
+  document.getElementById('pin-screen').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+}
+
+function enterWithName() {
+  const name = document.getElementById('new-name').value.trim();
+  if(!name){ alert('Escribe tu nombre'); return; }
+  enterAs(name);
+}
+
+document.getElementById('new-name').addEventListener('keydown', e => {
+  if(e.key==='Enter') enterWithName();
+});
+
+async function enterAs(name) {
+  clearInterval(loginRefreshTimer);
+  currentUser = name;
+  localStorage.setItem('wc2026_user', name);
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('pin-screen').style.display='none';
+  document.getElementById('app').style.display='block';
+  document.getElementById('user-display').textContent = name;
+  await loadFromDB();
+}
+
+function changeUser() {
+  currentUser='';
+  localStorage.removeItem('wc2026_user');
+  document.getElementById('app').style.display='none';
+  document.getElementById('login-screen').style.display='flex';
+  initLogin();
+}
+
+function setPinForCurrentUser() {
+  pinValue = ''; pinMode = 'set'; pinTarget = currentUser;
+  document.getElementById('pin-username').textContent = currentUser;
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('pin-screen').style.display = 'flex';
+  document.getElementById('pin-error').textContent = '';
+  updatePinDots();
+}
+
+
+// ── INTERCAMBIOS ──────────────────────────────────────────────────────────
+
+async function openIntercambios() {
+  document.getElementById('grid').style.display='none';
+  document.querySelector('.controls').style.display='none';
+  document.getElementById('inter-screen').style.display='block';
+  await showFriendsList();
+}
+
+function closeIntercambios() {
+  document.getElementById('inter-screen').style.display='none';
+  document.querySelector('.controls').style.display='flex';
+  document.getElementById('grid').style.display='grid';
+}
+
+async function showFriendsList() {
+  document.getElementById('inter-content').innerHTML='<div style="text-align:center;padding:2rem;color:var(--muted)">Cargando amigos...</div>';
+  
+  const res = await fetch(`${DB_BASE}/users.json`);
+  const users = await res.json();
+  if(!users){ document.getElementById('inter-content').innerHTML='<p style="color:var(--muted)">No hay otros usuarios aun.</p>'; return; }
+
+  const friends = Object.keys(users).filter(u=>u!==currentUser);
+  if(!friends.length){ document.getElementById('inter-content').innerHTML='<p style="color:var(--muted);text-align:center;padding:2rem">Aun no hay amigos registrados.</p>'; return; }
+
+  // Calcular matches para cada amigo
+  const cards = await Promise.all(friends.map(async(f,i)=>{
+    const fRes = await fetch(`${DB_BASE}/users/${encodeURIComponent(f)}/album.json`);
+    const fData = await fRes.json();
+    const fState = fData?.album || fData || {};
+    const fReps  = fData?.reps  || {};
+    const {give,get} = calcMatches(fState, fReps);
+    const total = give.reduce((a,t)=>a+t.stickers.length,0) + get.reduce((a,t)=>a+t.stickers.length,0);
+    return {name:f, idx:i, give, get, total, fState, fReps};
+  }));
+
+  const html = `
+    <div style="font-family:'Archivo Black',sans-serif;font-size:1.1rem;margin-bottom:1rem">Posibles intercambios</div>
+    <div class="friends-grid">
+      ${cards.map(c=>`
+        <div class="friend-card" onclick='showMatch(${JSON.stringify(c.name)}, ${JSON.stringify(c.fState)}, ${JSON.stringify(c.fReps)}, ${c.idx})'>
+          <span class="friend-emoji">${EMOJIS[c.idx%EMOJIS.length]}</span>
+          <div class="friend-name">${c.name}</div>
+          <div class="friend-meta">${c.give.reduce((a,t)=>a+t.stickers.length,0)} te puede dar · ${c.get.reduce((a,t)=>a+t.stickers.length,0)} le puedes dar</div>
+          <span class="friend-badge${c.total===0?' zero':''}">${c.total===0?'Sin matches':c.total+' figuritas'}</span>
+        </div>
+      `).join('')}
+    </div>`;
+  document.getElementById('inter-content').innerHTML = html;
+}
+
+function calcMatches(fState, fReps) {
+  const give = []; // el amigo me puede dar (tiene repetidas que me faltan)
+  const get  = []; // yo le puedo dar (tengo repetidas que le faltan)
+
+  TEAMS.forEach(t=>{
+    const myArr   = state[t.code]  || Array(t.n).fill(false);
+    const myReps  = reps[t.code]   || {};
+    const fArr    = fState[t.code] || Array(t.n).fill(false);
+    const fRepMap = fReps[t.code]  || {};
+
+    const giveStk = [], getStk = [];
+    for(let i=0;i<t.n;i++){
+      if((fRepMap[i]||0)>0 && !myArr[i]) giveStk.push(i+1); // amigo tiene repetida, me falta
+      if((myReps[i]||0)>0 && !fArr[i])  getStk.push(i+1);  // yo tengo repetida, le falta
+    }
+    if(giveStk.length) give.push({code:t.code, stickers:giveStk});
+    if(getStk.length)  get.push({code:t.code,  stickers:getStk});
+  });
+  return {give, get};
+}
+
+function showMatch(fname, fState, fReps, fidx) {
+  const {give, get} = calcMatches(fState, fReps);
+  const giveTotal = give.reduce((a,t)=>a+t.stickers.length,0);
+  const getTotal  = get.reduce((a,t)=>a+t.stickers.length,0);
+
+  const renderTeams = (list, cls) => list.length
+    ? list.map(t=>`
+        <div class="match-team">
+          <div class="match-team-code">${t.code}</div>
+          <div class="match-stickers">${t.stickers.map(n=>`<div class="match-stk ${cls}">${n}</div>`).join('')}</div>
+        </div>`).join('')
+    : '<div class="match-empty">Ninguna por ahora</div>';
+
+  const html = `
+    <button class="inter-back" onclick="showFriendsList()" style="margin-bottom:1rem">← Todos los amigos</button>
+    <div class="match-header">
+      <div class="match-emoji">${EMOJIS[fidx%EMOJIS.length]}</div>
+      <div>
+        <div class="match-name">${fname}</div>
+        <div class="match-meta">${giveTotal} te puede dar · ${getTotal} le puedes dar</div>
+      </div>
+    </div>
+    <div class="match-cols">
+      <div class="match-col">
+        <div class="match-col-header get">🔵 ${fname} te puede dar (${giveTotal})</div>
+        ${renderTeams(give,'get')}
+        ${give.length?`<div class="match-total">Total: ${giveTotal} figuritas</div>`:''}
+      </div>
+      <div class="match-col">
+        <div class="match-col-header give">🟢 Tú le puedes dar (${getTotal})</div>
+        ${renderTeams(get,'give')}
+        ${get.length?`<div class="match-total">Total: ${getTotal} figuritas</div>`:''}
+      </div>
+    </div>`;
+  document.getElementById('inter-content').innerHTML = html;
+}
+
+// ── FIREBASE ───────────────────────────────────────────────────────────────
+
+function dbUrl(){ return `${DB_BASE}/users/${encodeURIComponent(currentUser)}/album.json`; }
+
+function syncStatus(s){
+  const dot=document.getElementById('sync-dot'), txt=document.getElementById('sync-txt');
+  if(s==='ok')    {dot.className='sync-dot ok';txt.textContent='Sincronizado';}
+  if(s==='saving'){dot.className='sync-dot saving';txt.textContent='Guardando...';}
+  if(s==='err')   {dot.className='sync-dot err';txt.textContent='Sin conexion';}
+  if(s==='load')  {dot.className='sync-dot';txt.textContent='Cargando...';}
+}
+
+async function loadFromDB(){
+  syncStatus('load');
+  try{
+    const res=await fetch(dbUrl());
+    const data=await res.json();
+    state=data?.album||data||{};
+    reps=data?.reps||{};
+    TEAMS.forEach(t=>{if(!state[t.code])state[t.code]=Array(t.n).fill(false);});
+    syncStatus('ok');
+  }catch(e){
+    TEAMS.forEach(t=>{if(!state[t.code])state[t.code]=Array(t.n).fill(false);});
+    syncStatus('err');
+  }
+  renderGrid();
+}
+
+function compartirRepetidas(){
+  const lines = [];
+  TEAMS.forEach(t => {
+    const rep = reps[t.code] || {};
+    const figs = Object.entries(rep)
+      .filter(([idx, cnt]) => cnt > 0)
+      .map(([idx, cnt]) => {
+        const num = parseInt(idx) + 1;
+        return cnt > 1 ? `${t.code}${num} (x${cnt})` : `${t.code}${num} (x1)`;
+      });
+    if(figs.length) lines.push(t.code + ' · pág. ' + (t.page||'?') + '\n' + figs.join(', '));
+  });
+  const modal = document.getElementById('modal-reps');
+  const textarea = document.getElementById('reps-text');
+  if(!lines.length){
+    textarea.value = 'No tienes figuritas marcadas como repetidas.\n\nPara marcar una figurita como repetida: primero tenla marcada, luego haz click derecho (PC) o mantén presionado (celular).';
+  } else {
+    textarea.value = 'Repetidas\n' + lines.join('\n');
+  }
+  modal.style.display = 'flex';
+}
+
+function copiarRepetidas(){
+  const text = document.getElementById('reps-text').value;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('btn-copiar');
+    btn.textContent = '✅ Copiado!';
+    setTimeout(() => btn.textContent = '📋 Copiar', 2000);
+  }).catch(() => {
+    document.getElementById('reps-text').select();
+    document.execCommand('copy');
+  });
+}
+
+function exportarFaltantes(){
+  const lines = [];
+  const normalTeams = TEAMS.filter(t=>t.group);
+  const groups = ['A','B','C','D','E','F','G','H','I','J','K','L'];
+  groups.forEach(g=>{
+    const gteams = normalTeams.filter(t=>t.group===g);
+    gteams.forEach(t=>{
+      const arr = state[t.code]||Array(t.n).fill(false);
+      const faltan = arr.map((v,i)=>v?null:i+1).filter(Boolean);
+      if(faltan.length) lines.push(t.code + ' · pág. ' + (t.page||'?') + '\n' + faltan.join(', '));
+    });
+  });
+  // Especiales
+  TEAMS.filter(t=>!t.group).forEach(t=>{
+    const arr = state[t.code]||Array(t.n).fill(false);
+    const faltan = arr.map((v,i)=>v?null:i+1).filter(Boolean);
+    if(faltan.length) lines.push(t.code + '\n' + faltan.join(', '));
+  });
+  const total = TEAMS.reduce((s,t)=>{
+    return s + (state[t.code]||Array(t.n).fill(false)).filter(v=>!v).length;
+  },0);
+  const modal = document.getElementById('modal-faltan');
+  document.getElementById('faltan-text').value = lines.length
+    ? 'Me faltan ' + total + ' figuritas:\n\n' + lines.join('\n')
+    : '¡Álbum completo! 🏆';
+  modal.style.display = 'flex';
+}
+
+function copiarFaltantes(){
+  const text = document.getElementById('faltan-text').value;
+  navigator.clipboard.writeText(text).then(()=>{
+    const btn = document.getElementById('btn-copiar-faltan');
+    btn.textContent = '✅ Copiado!';
+    setTimeout(()=>btn.textContent='📋 Copiar', 2000);
+  }).catch(()=>{
+    document.getElementById('faltan-text').select();
+    document.execCommand('copy');
+  });
+}
+
+function saveToDB(){
+  syncStatus('saving');
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(async()=>{
+    try{
+      await fetch(dbUrl(),{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({album:state,reps:reps})});
+      await fetch(`${DB_BASE}/users/${encodeURIComponent(currentUser)}/name.json`,{method:'PUT',body:JSON.stringify(currentUser)});
+      syncStatus('ok');
+    }catch(e){syncStatus('err');}
+  },800);
+}
+
+// ── GRID ───────────────────────────────────────────────────────────────────
+
+function setFilter(f){
+  filter=f;
+  ['all','inc','com','grp'].forEach(x=>document.getElementById('f-'+x).classList.toggle('active',x===f));
+  renderGrid();
+}
+
+function toggleSort(){
+  sortAZ=!sortAZ;
+  const btn=document.getElementById('f-az');
+  btn.classList.toggle('active',sortAZ);
+  btn.textContent=sortAZ?'Z→A':'A→Z';
+  renderGrid();
+}
+
+
+function renderGrid(){
+  const q=document.getElementById('search').value.toUpperCase().trim();
+  let teams=TEAMS.filter(t=>!q||t.code.includes(q)||t.name.toUpperCase().includes(q));
+  if(filter==='inc')teams=teams.filter(t=>(state[t.code]||[]).some(x=>!x));
+  if(filter==='com')teams=teams.filter(t=>(state[t.code]||[]).every(x=>x));
+  if(sortAZ) teams=[...teams].sort((a,b)=>a.name.localeCompare(b.name,'es'));
+  const grid=document.getElementById('grid');
+  if(!teams.length){grid.innerHTML='<div class="no-results">No se encontraron selecciones</div>';return;}
+  if(filter==='grp'){
+    const groups=['A','B','C','D','E','F','G','H','I','J','K','L'];
+    let html='';
+    groups.forEach(g=>{
+      const gteams=teams.filter(t=>t.group===g);
+      if(!gteams.length)return;
+      html+=`<div class="group-header">Grupo ${g}</div>`;
+      html+=gteams.map(t=>makeCard(t)).join('');
+    });
+    // add CC/FWC at end without group header
+    const extras=teams.filter(t=>!t.group);
+    if(extras.length){
+      html+=`<div class="group-header">Especiales</div>`;
+      html+=extras.map(t=>makeCard(t)).join('');
+    }
+    grid.innerHTML=html;
+    updateStats();
+    return;
+  }
+  grid.innerHTML=teams.map(t=>makeCard(t)).join('');
+  updateStats();
+}
+
+function makeCard(t){
+    const N=t.n, color=t.color||PALETTE[TEAMS.indexOf(t)%PALETTE.length];
+    const arr=state[t.code]||Array(N).fill(false);
+    const have=arr.filter(Boolean).length, pct=Math.round(have/N*100), isComplete=have===N;
+    const rep=reps[t.code]||{};
+    const stks=arr.map((v,idx)=>{
+      const r=rep[idx]||0;
+      const badge=r>0?`<span class="stk-badge">${r}</span>`:'';
+      return `<div class="stk${v?' have':''}${r>0?' repeated':''}" 
+        onclick="toggle('${t.code}',${idx})"
+        oncontextmenu="addRep('${t.code}',${idx},event)"
+        ontouchstart="startLongPress('${t.code}',${idx},event)"
+        ontouchend="cancelLongPress()"
+        ontouchmove="cancelLongPress()"
+        style="position:relative"
+        >${idx+1}${badge}</div>`;
+    }).join('');
+    return `<div class="card${isComplete?' complete':''}" id="card-${t.code}" style="--cc:${color}">
+      <div class="card-accent"></div>
+      <div class="card-head">
+        <div class="card-code">${t.code}</div>
+        <div class="card-cnt" id="cnt-${t.code}">${have}/${N} · ${pct}%</div>
+      </div>
+      <div class="card-name">${t.name}${t.page?`<span style="font-size:10px;font-weight:400;color:var(--muted);margin-left:6px">pág. ${t.page}</span>`:""}</div>
+      <div class="mbar"><div class="mfill" id="mf-${t.code}" style="width:${pct}%"></div></div>
+      <div class="stickers">${stks}</div>
+    </div>`;
+}
+
+function addRep(code,idx,e){
+  e.preventDefault();
+  if(!state[code]||!state[code][idx]) return; // solo si ya la tiene
+  if(!reps[code]) reps[code]={};
+  const current = reps[code][idx]||0;
+  if(current > 0){
+    // ya está marcada como repetida → preguntar sumar o restar
+    showRepMenu(code, idx, e);
+  } else {
+    reps[code][idx] = 1;
+    saveToDB();
+    updateRepBadge(code, idx);
+  }
+}
+
+function showRepMenu(code, idx, e){
+  // Remove any existing menu
+  const old = document.getElementById('rep-menu');
+  if(old) old.remove();
+
+  const menu = document.createElement('div');
+  menu.id = 'rep-menu';
+  menu.style.cssText = `position:fixed;z-index:9999;background:var(--dark);border-radius:10px;padding:.5rem;display:flex;flex-direction:column;gap:.4rem;box-shadow:0 4px 20px rgba(0,0,0,.5);min-width:160px`;
+  
+  const cur = reps[code][idx]||0;
+  menu.innerHTML = `
+    <div style="color:var(--yellow);font-family:'Archivo Black',sans-serif;font-size:.8rem;padding:.25rem .5rem">${code}${idx+1} · ${cur} repetida${cur!==1?'s':''}</div>
+    <button onclick="changeRep('${code}',${idx},1);document.getElementById('rep-menu').remove()" style="background:#1a3a1a;color:#4ade80;border:1px solid #2a5a2a;border-radius:6px;padding:.4rem .75rem;cursor:pointer;font-size:.85rem;text-align:left">➕ Sumar repetida</button>
+    <button onclick="changeRep('${code}',${idx},-1);document.getElementById('rep-menu').remove()" style="background:#3a1a1a;color:#f87171;border:1px solid #5a2a2a;border-radius:6px;padding:.4rem .75rem;cursor:pointer;font-size:.85rem;text-align:left">➖ Quitar repetida</button>
+    <button onclick="changeRep('${code}',${idx},-99);document.getElementById('rep-menu').remove()" style="background:#2a1a00;color:#fb923c;border:1px solid #5a3a00;border-radius:6px;padding:.4rem .75rem;cursor:pointer;font-size:.85rem;text-align:left">🗑 Borrar todas</button>
+  `;
+
+  // Position near click
+  const x = Math.min(e.clientX||e.touches?.[0]?.clientX||100, window.innerWidth-180);
+  const y = Math.min(e.clientY||e.touches?.[0]?.clientY||100, window.innerHeight-160);
+  menu.style.left = x+'px';
+  menu.style.top = y+'px';
+  document.body.appendChild(menu);
+
+  // Close on outside click
+  setTimeout(()=>{
+    document.addEventListener('click', function closeMenu(ev){
+      if(!menu.contains(ev.target)){ menu.remove(); document.removeEventListener('click',closeMenu); }
+    });
+  }, 100);
+}
+
+function changeRep(code, idx, delta){
+  if(!reps[code]) reps[code]={};
+  if(delta===-99){
+    reps[code][idx]=0;
+  } else {
+    reps[code][idx]=Math.max(0,(reps[code][idx]||0)+delta);
+  }
+  saveToDB();
+  updateRepBadge(code, idx);
+}
+
+function updateRepBadge(code, idx){
+  const card=document.getElementById('card-'+code);
+  if(!card) return;
+  const stk=card.querySelectorAll('.stk')[idx];
+  if(!stk) return;
+  let badge=stk.querySelector('.stk-badge');
+  const val = reps[code]?.[idx]||0;
+  if(val > 0){
+    if(!badge){ badge=document.createElement('span'); badge.className='stk-badge'; stk.appendChild(badge); }
+    badge.textContent=val;
+    stk.classList.add('repeated');
+  } else {
+    if(badge) badge.remove();
+    stk.classList.remove('repeated');
+  }
+  // update header rep count
+  updateStats();
+}
+
+function startLongPress(code,idx,e){
+  cancelLongPress();
+  longPressTimer=setTimeout(()=>{
+    addRep(code,idx,e);
+    if(navigator.vibrate) navigator.vibrate(40);
+  },600);
+}
+
+function cancelLongPress(){ clearTimeout(longPressTimer); }
+
+function toggle(code,idx){
+  if(!state[code])state[code]=Array(TEAMS.find(t=>t.code===code).n).fill(false);
+  state[code][idx]=!state[code][idx];
+  saveToDB();
+  const t=TEAMS.find(x=>x.code===code), N=t.n;
+  const have=state[code].filter(Boolean).length, pct=Math.round(have/N*100);
+  const card=document.getElementById('card-'+code);
+  if(card){
+    document.getElementById('cnt-'+code).textContent=`${have}/${N} · ${pct}%`;
+    document.getElementById('mf-'+code).style.width=pct+'%';
+    card.classList.toggle('complete',have===N);
+    card.querySelectorAll('.stk')[idx].classList.toggle('have',state[code][idx]);
+  }
+  updateStats();
+  if(filter!=='all')renderGrid();
+}
+
+function updateStats(){
+  let total=0,complete=0;
+  TEAMS.forEach(t=>{const h=(state[t.code]||[]).filter(Boolean).length;total+=h;if(h===t.n)complete++;});
+  const pct=Math.round(total/TOTAL*100);
+  document.getElementById('s-tengo').textContent=total;
+  document.getElementById('s-faltan').textContent=TOTAL-total;
+  document.getElementById('s-paises').textContent=complete;
+  document.getElementById('prog-fill').style.width=pct+'%';
+  document.getElementById('prog-txt').textContent=`${total} / ${TOTAL} · ${pct}%`;
+  const inc=TEAMS.filter(t=>(state[t.code]||[]).some(x=>!x)).length;
+  const com=TEAMS.filter(t=>(state[t.code]||[]).every(x=>x)).length;
+  document.getElementById('f-inc').textContent=`Incompletas (${inc})`;
+  document.getElementById('f-com').textContent=`Completas (${com})`;
+  let totalReps=0;
+  Object.values(reps).forEach(r=>Object.values(r).forEach(v=>totalReps+=v));
+  document.getElementById('s-reps').textContent=totalReps;
+}
+
+async function confirmReset(){
+  if(confirm(`Reiniciar TODO el album de ${currentUser}? No se puede deshacer.`)){
+    TEAMS.forEach(t=>{state[t.code]=Array(t.n).fill(false);});
+    await fetch(dbUrl(),{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({album:state,reps:reps})});
+    syncStatus('ok');renderGrid();
+  }
+}
+
+// ── INIT ───────────────────────────────────────────────────────────────────
+const savedUser = localStorage.getItem('wc2026_user');
+if(savedUser){ enterAs(savedUser); }
+else{ initLogin(); }
+</script>
+</body>
+</html>
