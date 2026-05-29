@@ -758,7 +758,7 @@ function renderGrid(){
   let teams=TEAMS.filter(t=>!q||t.code.includes(q)||t.name.toUpperCase().includes(q));
   if(filter==='inc')teams=teams.filter(t=>(state[t.code]||[]).some(x=>!x));
   if(filter==='com')teams=teams.filter(t=>(state[t.code]||[]).every(x=>x));
-  if(sortAZ) teams=[...teams].sort((a,b)=>a.name.localeCompare(b.name,'es'));
+  if(sortAZ) teams=[...teams].sort((a,b)=>a.code.localeCompare(b.code));
   const grid=document.getElementById('grid');
   if(!teams.length){grid.innerHTML='<div class="no-results">No se encontraron selecciones</div>';return;}
   if(filter==='grp'){
