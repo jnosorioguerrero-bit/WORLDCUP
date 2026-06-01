@@ -340,6 +340,7 @@ header{background:var(--dark);position:sticky;top:0;z-index:100;box-shadow:0 4px
     <button class="fbtn" id="f-com" onclick="setFilter('com')">Completas</button>
     <button class="fbtn" id="f-grp" onclick="setFilter('grp')">Grupos</button>
     <button class="fbtn" id="f-az" onclick="toggleSort()">A→Z</button>
+    <button class="rbtn" style="background:#F07020;border-color:#F07020" onclick="confirmClearReps()">Borrar repetidas</button>
     <button class="rbtn" onclick="confirmReset()">Reiniciar</button>
   </div>
 
@@ -667,8 +668,8 @@ function calcMatches(fState, fReps) {
 
     const giveStk = [], getStk = [];
     for(let i=0;i<t.n;i++){
-      if((fRepMap[i]||0)>0 && !myArr[i]) giveStk.push(i+1); // amigo tiene repetida, me falta
-      if((myReps[i]||0)>0 && !fArr[i])  getStk.push(i+1);  // yo tengo repetida, le falta
+      if((fRepMap[String(i)]||0)>0 && !myArr[i]) giveStk.push(i+1); // amigo tiene repetida, me falta
+      if((myReps[String(i)]||0)>0 && !fArr[i])  getStk.push(i+1);  // yo tengo repetida, le falta
     }
     if(giveStk.length) give.push({code:t.code, stickers:giveStk});
     if(getStk.length)  get.push({code:t.code,  stickers:getStk});
@@ -1085,6 +1086,19 @@ function updateStats(){
   let totalReps=0;
   Object.values(reps).forEach(r=>Object.values(r).forEach(v=>totalReps+=v));
   document.getElementById('s-reps').textContent=totalReps;
+}
+
+function confirmClearReps(){
+  const total = Object.values(reps).reduce((sum, t) => {
+    if(typeof t !== 'object' || Array.isArray(t)) return sum;
+    return sum + Object.values(t).filter(v=>v>0).length;
+  }, 0);
+  if(total === 0){ alert('No tienes figuritas marcadas como repetidas.'); return; }
+  if(confirm(`Borrar todas las repetidas (${total} figuritas)? No se puede deshacer.`)){
+    TEAMS.forEach(t=>{ reps[t.code]={}; });
+    saveToDB();
+    renderGrid();
+  }
 }
 
 async function confirmReset(){
