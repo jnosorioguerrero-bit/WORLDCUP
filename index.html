@@ -155,6 +155,66 @@ header{background:var(--dark);position:sticky;top:0;z-index:100;box-shadow:0 4px
 .stk.have{background:var(--cc,var(--blue));border-color:var(--cc,var(--blue));color:rgba(255,255,255,0.8)}
 .card.complete .stk.have{background:var(--green);border-color:var(--green)}
 .no-results{grid-column:1/-1;text-align:center;color:var(--muted);padding:3rem;font-size:14px}
+
+@media print {
+  @page { size: A4 portrait; margin: 10mm 8mm; }
+
+  header, .controls, #modal-faltan, #modal-reps,
+  #login-screen, #pin-screen, #inter-screen,
+  .header-blocks, div[style*="Click derecho"] { display: none !important; }
+
+  body { background: #fff !important; padding: 0; }
+  #app { display: block !important; }
+
+  .grid {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 5px !important;
+    padding: 0 !important;
+  }
+
+  .group-header {
+    grid-column: 1 / -1 !important;
+    font-size: 9pt !important;
+    padding: 3px 6px !important;
+    border-radius: 4px !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .card {
+    border: 1.5px solid #333 !important;
+    border-radius: 6px !important;
+    padding: 5px !important;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+    background: #fff !important;
+  }
+
+  .card-accent {
+    height: 4px !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .card-code { font-size: 9pt !important; }
+  .card-cnt  { font-size: 7pt !important; }
+  .card-name { font-size: 7pt !important; margin-bottom: 3px !important; }
+  .mbar      { height: 2px !important; margin-bottom: 4px !important; }
+  .mfill     { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  .stickers  { gap: 2px !important; }
+  .stk {
+    min-height: 16px !important;
+    height: 16px !important;
+    font-size: 7pt !important;
+    border-radius: 3px !important;
+    border: 1px solid #ccc !important;
+  }
+  .stk.have  { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .card:hover { transform: none !important; box-shadow: none !important; }
+  .card-code img { width: 16px !important; height: 12px !important; }
+}
 </style>
 </head>
 <body>
@@ -284,7 +344,7 @@ header{background:var(--dark);position:sticky;top:0;z-index:100;box-shadow:0 4px
         <span style="font-family:'Archivo Black',sans-serif;font-size:1.1rem">📋 Me Faltan</span>
         <button onclick="document.getElementById('modal-faltan').style.display='none'" style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--muted)">✕</button>
       </div>
-      <textarea id="faltan-text" readonly style="flex:1;padding:1rem;font-family:monospace;font-size:13px;border:none;resize:none;background:var(--white);min-height:200px;outline:none"></textarea>
+      <div id="faltan-text" style="flex:1;padding:1rem;font-family:monospace;font-size:13px;background:var(--white);overflow-y:auto;min-height:200px;line-height:1.8"></div>
       <div style="padding:.75rem 1.25rem;display:flex;gap:.75rem">
         <button onclick="copiarFaltantes()" id="btn-copiar-faltan" style="flex:1;height:42px;background:var(--dark);color:var(--yellow);border:2px solid var(--dark);border-radius:8px;font-family:'Archivo Black',sans-serif;font-size:.9rem;cursor:pointer">📋 Copiar</button>
         <button onclick="document.getElementById('modal-faltan').style.display='none'" style="flex:1;height:42px;background:var(--white);border:2px solid var(--dark);border-radius:8px;font-family:'Archivo',sans-serif;font-size:.9rem;cursor:pointer">Cerrar</button>
@@ -299,7 +359,7 @@ header{background:var(--dark);position:sticky;top:0;z-index:100;box-shadow:0 4px
         <span style="font-family:'Archivo Black',sans-serif;font-size:1.1rem">📤 Mis Repetidas</span>
         <button onclick="document.getElementById('modal-reps').style.display='none'" style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--muted)">✕</button>
       </div>
-      <textarea id="reps-text" readonly style="flex:1;padding:1rem;font-family:monospace;font-size:13px;border:none;resize:none;background:var(--white);min-height:200px;outline:none"></textarea>
+      <div id="reps-text" style="flex:1;padding:1rem;font-family:monospace;font-size:13px;background:var(--white);overflow-y:auto;min-height:200px;line-height:1.8"></div>
       <div style="padding:.75rem 1.25rem;display:flex;gap:.75rem">
         <button onclick="copiarRepetidas()" id="btn-copiar" style="flex:1;height:42px;background:var(--dark);color:var(--yellow);border:2px solid var(--dark);border-radius:8px;font-family:'Archivo Black',sans-serif;font-size:.9rem;cursor:pointer">📋 Copiar</button>
         <button onclick="document.getElementById('modal-reps').style.display='none'" style="flex:1;height:42px;background:var(--white);border:2px solid var(--dark);border-radius:8px;font-family:'Archivo',sans-serif;font-size:.9rem;cursor:pointer">Cerrar</button>
@@ -321,6 +381,26 @@ header{background:var(--dark);position:sticky;top:0;z-index:100;box-shadow:0 4px
 const DB_BASE = 'https://album-mundial-2026-86dbc-default-rtdb.firebaseio.com';
 const PALETTE = ['#E8312A','#1B4FBF','#2AAD4A','#c8a000','#7B2FBE','#F07020'];
 const EMOJIS  = ['⚽','🥅','🏟️','🥇','🎯','🌟','🔥','💪'];
+// ISO2 codes for flagcdn.com
+const FLAG_ISO = {
+  MEX:'mx', RSA:'za', KOR:'kr', CZE:'cz',
+  CAN:'ca', BIH:'ba', QAT:'qa', SUI:'ch',
+  BRA:'br', MAR:'ma', HAI:'ht', SCO:'gb-sct',
+  USA:'us', PAR:'py', AUS:'au', TUR:'tr',
+  GER:'de', CUW:'cw', CIV:'ci', ECU:'ec',
+  NED:'nl', JPN:'jp', SWE:'se', TUN:'tn',
+  BEL:'be', EGY:'eg', IRN:'ir', NZL:'nz',
+  ESP:'es', CPV:'cv', KSA:'sa', URU:'uy',
+  FRA:'fr', SEN:'sn', IRQ:'iq', NOR:'no',
+  ARG:'ar', ALG:'dz', AUT:'at', JOR:'jo',
+  POR:'pt', COD:'cd', UZB:'uz', COL:'co',
+  ENG:'gb-eng', CRO:'hr', GHA:'gh', PAN:'pa',
+};
+function getFlag(code){
+  const iso = FLAG_ISO[code];
+  if(!iso) return '';
+  return '<img src="https://flagcdn.com/20x15/'+iso+'.png" width="20" height="15" style="border-radius:2px;margin-right:4px;vertical-align:middle;box-shadow:0 0 0 1px rgba(0,0,0,.1)" alt="'+code+'">';
+}
 const TEAMS = [
   {code:'MEX',name:'Mexico',n:20,page:8,group:'A'},
   {code:'RSA',name:'Sudafrica',n:20,page:10,group:'A'},
@@ -651,7 +731,7 @@ async function loadFromDB(){
 }
 
 function compartirRepetidas(){
-  const lines = [];
+  const htmlLines = [], textLines = [];
   TEAMS.forEach(t => {
     const rep = reps[t.code] || {};
     const figs = Object.entries(rep)
@@ -660,32 +740,38 @@ function compartirRepetidas(){
         const num = parseInt(idx) + 1;
         return cnt > 1 ? `${t.code}${num} (x${cnt})` : `${t.code}${num} (x1)`;
       });
-    if(figs.length) lines.push(t.code + ' · pág. ' + (t.page||'?') + '\n' + figs.join(', '));
+    if(figs.length){
+      const label = t.code + ' · ' + t.name + (t.page?' · pág. '+t.page:'');
+      htmlLines.push('<div style="margin-bottom:8px"><div style="font-weight:600;margin-bottom:2px">' + getFlag(t.code) + label + '</div><div style="color:#555">' + figs.join(', ') + '</div></div>');
+      textLines.push(label + '\n' + figs.join(', '));
+    }
   });
   const modal = document.getElementById('modal-reps');
-  const textarea = document.getElementById('reps-text');
-  if(!lines.length){
-    textarea.value = 'No tienes figuritas marcadas como repetidas.\n\nPara marcar una figurita como repetida: primero tenla marcada, luego haz click derecho (PC) o mantén presionado (celular).';
+  const div = document.getElementById('reps-text');
+  div._plainText = textLines.length ? 'Repetidas\n\n' + textLines.join('\n\n') : '';
+  if(!htmlLines.length){
+    div.innerHTML = '<span style="color:#888">No tienes figuritas marcadas como repetidas.<br><br>Para marcar una figurita: tenla marcada y luego click derecho (PC) o mantén presionado (celular).</span>';
   } else {
-    textarea.value = 'Repetidas\n' + lines.join('\n');
+    div.innerHTML = '<div style="font-weight:700;margin-bottom:10px">📤 Repetidas</div>' + htmlLines.join('');
   }
   modal.style.display = 'flex';
 }
 
 function copiarRepetidas(){
-  const text = document.getElementById('reps-text').value;
+  const text = document.getElementById('reps-text')._plainText || '';
   navigator.clipboard.writeText(text).then(() => {
     const btn = document.getElementById('btn-copiar');
     btn.textContent = '✅ Copiado!';
     setTimeout(() => btn.textContent = '📋 Copiar', 2000);
   }).catch(() => {
-    document.getElementById('reps-text').select();
-    document.execCommand('copy');
+    const ta = document.createElement('textarea');
+    ta.value = text; document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); document.body.removeChild(ta);
   });
 }
 
 function exportarFaltantes(){
-  const lines = [];
+  const htmlLines = [], textLines = [];
   const normalTeams = TEAMS.filter(t=>t.group);
   const groups = ['A','B','C','D','E','F','G','H','I','J','K','L'];
   groups.forEach(g=>{
@@ -693,34 +779,44 @@ function exportarFaltantes(){
     gteams.forEach(t=>{
       const arr = state[t.code]||Array(t.n).fill(false);
       const faltan = arr.map((v,i)=>v?null:i+1).filter(Boolean);
-      if(faltan.length) lines.push(t.code + ' · pág. ' + (t.page||'?') + '\n' + faltan.join(', '));
+      if(faltan.length){
+        const label = t.code + ' · ' + t.name + (t.page?' · pág. '+t.page:'');
+        htmlLines.push('<div style="margin-bottom:8px"><div style="font-weight:600;margin-bottom:2px">' + getFlag(t.code) + label + '</div><div style="color:#555">' + faltan.join(', ') + '</div></div>');
+        textLines.push(label + '\n' + faltan.join(', '));
+      }
     });
   });
-  // Especiales
   TEAMS.filter(t=>!t.group).forEach(t=>{
     const arr = state[t.code]||Array(t.n).fill(false);
     const faltan = arr.map((v,i)=>v?null:i+1).filter(Boolean);
-    if(faltan.length) lines.push(t.code + '\n' + faltan.join(', '));
+    if(faltan.length){
+      const label = t.code + ' · ' + t.name;
+      htmlLines.push('<div style="margin-bottom:8px"><div style="font-weight:600;margin-bottom:2px">' + getFlag(t.code) + label + '</div><div style="color:#555">' + faltan.join(', ') + '</div></div>');
+      textLines.push(label + '\n' + faltan.join(', '));
+    }
   });
   const total = TEAMS.reduce((s,t)=>{
     return s + (state[t.code]||Array(t.n).fill(false)).filter(v=>!v).length;
   },0);
   const modal = document.getElementById('modal-faltan');
-  document.getElementById('faltan-text').value = lines.length
-    ? 'Me faltan ' + total + ' figuritas:\n\n' + lines.join('\n')
-    : '¡Álbum completo! 🏆';
+  const div = document.getElementById('faltan-text');
+  div._plainText = textLines.length ? 'Me faltan ' + total + ' figuritas:\n\n' + textLines.join('\n\n') : '¡Álbum completo! 🏆';
+  div.innerHTML = htmlLines.length
+    ? '<div style="font-weight:700;margin-bottom:10px">📋 Me faltan ' + total + ' figuritas</div>' + htmlLines.join('')
+    : '<span style="font-size:1.5rem">🏆 ¡Álbum completo!</span>';
   modal.style.display = 'flex';
 }
 
 function copiarFaltantes(){
-  const text = document.getElementById('faltan-text').value;
+  const text = document.getElementById('faltan-text')._plainText || '';
   navigator.clipboard.writeText(text).then(()=>{
     const btn = document.getElementById('btn-copiar-faltan');
     btn.textContent = '✅ Copiado!';
     setTimeout(()=>btn.textContent='📋 Copiar', 2000);
   }).catch(()=>{
-    document.getElementById('faltan-text').select();
-    document.execCommand('copy');
+    const ta = document.createElement('textarea');
+    ta.value = text; document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); document.body.removeChild(ta);
   });
 }
 
@@ -804,7 +900,7 @@ function makeCard(t){
     return `<div class="card${isComplete?' complete':''}" id="card-${t.code}" style="--cc:${color}">
       <div class="card-accent"></div>
       <div class="card-head">
-        <div class="card-code">${t.code}</div>
+        <div class="card-code">${getFlag(t.code)}${t.code}</div>
         <div class="card-cnt" id="cnt-${t.code}">${have}/${N} · ${pct}%</div>
       </div>
       <div class="card-name">${t.name}${t.page?`<span style="font-size:10px;font-weight:400;color:var(--muted);margin-left:6px">pág. ${t.page}</span>`:""}</div>
