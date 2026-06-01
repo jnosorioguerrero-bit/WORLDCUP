@@ -154,6 +154,14 @@ header{background:var(--dark);position:sticky;top:0;z-index:100;box-shadow:0 4px
 .stk:active{transform:scale(.88)}
 .stk.have{background:var(--cc,var(--blue));border-color:var(--cc,var(--blue));color:rgba(255,255,255,0.8)}
 .card.complete .stk.have{background:var(--green);border-color:var(--green)}
+.stk.repeated{background:var(--orange)!important;border-color:var(--orange)!important;color:#fff!important;position:relative}
+.stk-badge{
+  position:absolute;top:-4px;right:-4px;
+  background:#c0392b;color:#fff;
+  font-size:7px;font-weight:700;line-height:1;
+  padding:1px 3px;border-radius:4px;
+  pointer-events:none;
+}
 .no-results{grid-column:1/-1;text-align:center;color:var(--muted);padding:3rem;font-size:14px}
 
 @media print {
@@ -887,7 +895,7 @@ function makeCard(t){
     const rep=reps[t.code]||{};
     const stks=arr.map((v,idx)=>{
       const r=rep[idx]||0;
-      const badge=r>0?`<span class="stk-badge">${r}</span>`:'';
+      const badge=r>1?`<span class="stk-badge">${r}</span>`:'';
       return `<div class="stk${v?' have':''}${r>0?' repeated':''}" 
         onclick="toggle('${t.code}',${idx})"
         oncontextmenu="addRep('${t.code}',${idx},event)"
@@ -976,7 +984,7 @@ function updateRepBadge(code, idx){
   const val = reps[code]?.[idx]||0;
   if(val > 0){
     if(!badge){ badge=document.createElement('span'); badge.className='stk-badge'; stk.appendChild(badge); }
-    badge.textContent=val;
+    badge.textContent = val > 1 ? val : '';
     stk.classList.add('repeated');
   } else {
     if(badge) badge.remove();
@@ -1046,3 +1054,4 @@ else{ initLogin(); }
 </script>
 </body>
 </html>
+
