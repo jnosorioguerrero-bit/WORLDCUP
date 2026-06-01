@@ -163,6 +163,8 @@ header{background:var(--dark);position:sticky;top:0;z-index:100;box-shadow:0 4px
   pointer-events:none;
 }
 .no-results{grid-column:1/-1;text-align:center;color:var(--muted);padding:3rem;font-size:14px}
+.match-team-code{display:flex;align-items:center;gap:4px;font-family:'Archivo Black',sans-serif;font-size:11px;margin-bottom:4px}
+.match-team-name{font-family:inherit;font-weight:400;font-size:10px;color:var(--muted);margin-left:2px}
 
 @media print {
   @page { size: A4 portrait; margin: 10mm 8mm; }
@@ -678,13 +680,39 @@ function showMatch(fname, fState, fReps, fidx) {
   const giveTotal = give.reduce((a,t)=>a+t.stickers.length,0);
   const getTotal  = get.reduce((a,t)=>a+t.stickers.length,0);
 
+  const stkStyle = (cls) => cls==='get'
+    ? 'display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;padding:0 4px;border-radius:4px;background:#1B4FBF;color:#fff;font-size:9px;font-weight:700;margin:2px'
+    : 'display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;padding:0 4px;border-radius:4px;background:#2AAD4A;color:#fff;font-size:9px;font-weight:700;margin:2px';
+
   const renderTeams = (list, cls) => list.length
-    ? list.map(t=>`
-        <div class="match-team">
-          <div class="match-team-code">${t.code}</div>
-          <div class="match-stickers">${t.stickers.map(n=>`<div class="match-stk ${cls}">${n}</div>`).join('')}</div>
-        </div>`).join('')
-    : '<div class="match-empty">Ninguna por ahora</div>';
+    ? list.map(t=>{
+        const team = TEAMS.find(x=>x.code===t.code)||{};
+        return `
+        <div style="margin-bottom:10px;padding:8px 10px;background:#f8f8f8;border-radius:8px">
+          <div style="display:flex;align-items:center;gap:5px;font-weight:700;font-size:11px;margin-bottom:6px">
+            ${getFlag(t.code)}<span>${t.code}</span>
+            <span style="font-weight:400;font-size:10px;color:#888">${team.name||''}${team.page?' · pág. '+team.page:''}</span>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:2px">
+            ${t.stickers.map(n=>`<div style="${stkStyle(cls)}">${n}</div>`).join('')}
+          </div>
+        </div>`;
+      }).join('')
+    : '<div style="color:#aaa;font-size:12px;padding:8px">Ninguna por ahora</div>';
+
+  // Texto plano para WSP
+  const buildText = (list, header) => {
+    if(!list.length) return '';
+    const lines = list.map(t=>{
+      const team = TEAMS.find(x=>x.code===t.code)||{};
+      return t.code + ' · ' + (team.name||'') + (team.page?' · pág. '+team.page:'') + '\n' + t.stickers.join(', ');
+    });
+    return header + '\n\n' + lines.join('\n\n');
+  };
+
+  const giveTxt = buildText(give, `🔵 ${fname} te puede dar (${giveTotal})`);
+  const getTxt  = buildText(get,  `🟢 Tú le puedes dar (${getTotal})`);
+  const fullTxt = `🔄 Cambios con ${fname}\n\n` + [giveTxt, getTxt].filter(Boolean).join('\n\n---\n\n');
 
   const html = `
     <button class="inter-back" onclick="showFriendsList()" style="margin-bottom:1rem">← Todos los amigos</button>
@@ -695,19 +723,38 @@ function showMatch(fname, fState, fReps, fidx) {
         <div class="match-meta">${giveTotal} te puede dar · ${getTotal} le puedes dar</div>
       </div>
     </div>
+    <div style="margin-bottom:12px">
+      <button onclick="copiarCambios()" id="btn-copiar-cambios" style="background:#25D366;color:#fff;border:none;border-radius:8px;padding:8px 16px;font-weight:700;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px">
+        📋 Copiar para WhatsApp
+      </button>
+    </div>
     <div class="match-cols">
       <div class="match-col">
-        <div class="match-col-header get">🔵 ${fname} te puede dar (${giveTotal})</div>
+        <div class="match-col-header get" style="margin-bottom:8px">🔵 ${fname} te puede dar (${giveTotal})</div>
         ${renderTeams(give,'get')}
-        ${give.length?`<div class="match-total">Total: ${giveTotal} figuritas</div>`:''}
+        ${give.length?`<div class="match-total" style="font-size:11px;color:#666;padding:4px 0">Total: ${giveTotal} figuritas</div>`:''}
       </div>
       <div class="match-col">
-        <div class="match-col-header give">🟢 Tú le puedes dar (${getTotal})</div>
+        <div class="match-col-header give" style="margin-bottom:8px">🟢 Tú le puedes dar (${getTotal})</div>
         ${renderTeams(get,'give')}
-        ${get.length?`<div class="match-total">Total: ${getTotal} figuritas</div>`:''}
+        ${get.length?`<div class="match-total" style="font-size:11px;color:#666;padding:4px 0">Total: ${getTotal} figuritas</div>`:''}
       </div>
     </div>`;
   document.getElementById('inter-content').innerHTML = html;
+  document.getElementById('inter-content')._cambiosTxt = fullTxt;
+}
+
+function copiarCambios(){
+  const text = document.getElementById('inter-content')._cambiosTxt || '';
+  navigator.clipboard.writeText(text).then(()=>{
+    const btn = document.getElementById('btn-copiar-cambios');
+    btn.textContent = '✅ Copiado!';
+    setTimeout(()=>{ btn.innerHTML = '📋 Copiar para WhatsApp'; }, 2000);
+  }).catch(()=>{
+    const ta = document.createElement('textarea');
+    ta.value = text; document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); document.body.removeChild(ta);
+  });
 }
 
 // ── FIREBASE ───────────────────────────────────────────────────────────────
@@ -1054,4 +1101,3 @@ else{ initLogin(); }
 </script>
 </body>
 </html>
-
