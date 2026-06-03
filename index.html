@@ -125,6 +125,15 @@ header{background:var(--dark);position:sticky;top:0;z-index:100;box-shadow:0 4px
 .rbtn:hover{background:#fff0f0}
 
 .grid{padding:1.25rem 1.5rem;display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:10px}
+@media(max-width:480px){
+  .grid{grid-template-columns:1fr!important;padding:1rem;}
+  .stk{min-height:32px!important;height:32px!important;font-size:11px!important;}
+  .stickers{gap:4px!important;}
+  .card{padding:1rem!important;}
+  .card-code{font-size:1.3rem!important;}
+  .card-name{font-size:11px!important;margin-bottom:8px!important;}
+}
+@media(max-width:600px){.grid{grid-template-columns:1fr;padding:1rem}}
 .loading{grid-column:1/-1;text-align:center;padding:4rem;color:var(--muted);font-size:14px}
 .spinner{display:inline-block;width:24px;height:24px;border:3px solid #ddd;border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite;margin-bottom:1rem}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -348,7 +357,7 @@ header{background:var(--dark);position:sticky;top:0;z-index:100;box-shadow:0 4px
 
 
   <div style="background:var(--dark);color:#aaa;font-size:12px;text-align:center;padding:.5rem 1rem;border-bottom:1px solid #333">
-    💡 <b style="color:var(--yellow)">Click derecho</b> en PC o <b style="color:var(--yellow)">mantén presionado</b> en celular para marcar una figurita como repetida
+    💡 <b style="color:var(--yellow)">Click derecho</b> en PC · <b style="color:var(--yellow)">Doble tap</b> en celular para sumar repetida · <b style="color:var(--yellow)">Long press</b> para gestionar
   </div>
 
   <!-- Modal faltantes -->
@@ -980,9 +989,10 @@ function makeCard(t){
       return `<div class="stk${v?' have':''}${r>0?' repeated':''}" 
         onclick="toggle('${t.code}',${idx})"
         oncontextmenu="addRep('${t.code}',${idx},event)"
-        ontouchstart="startLongPress('${t.code}',${idx},event)"
-        ontouchend="cancelLongPress()"
-        ontouchmove="cancelLongPress()"
+        ondblclick="doubleTapRep('${t.code}',${idx})"
+        ontouchstart="handleTouchStart('${t.code}',${idx},event)"
+        ontouchend="handleTouchEnd('${t.code}',${idx},event)"
+        ontouchmove="handleTouchMove(event)"
         style="position:relative"
         >${idx+1}${badge}</div>`;
     }).join('');
@@ -1020,14 +1030,15 @@ function showRepMenu(code, idx, e){
 
   const menu = document.createElement('div');
   menu.id = 'rep-menu';
-  menu.style.cssText = `position:fixed;z-index:9999;background:var(--dark);border-radius:10px;padding:.5rem;display:flex;flex-direction:column;gap:.4rem;box-shadow:0 4px 20px rgba(0,0,0,.5);min-width:160px`;
+  const isMobile = window.matchMedia("(hover:none)").matches;
+  menu.style.cssText = `position:fixed;z-index:9999;background:var(--dark);border-radius:14px;padding:.6rem;display:flex;flex-direction:column;gap:.5rem;box-shadow:0 4px 20px rgba(0,0,0,.5);min-width:${isMobile?220:160}px`;
   
   const cur = reps[code][String(idx)]||0;
   menu.innerHTML = `
     <div style="color:var(--yellow);font-family:'Archivo Black',sans-serif;font-size:.8rem;padding:.25rem .5rem">${code}${idx+1} · ${cur} repetida${cur!==1?'s':''}</div>
-    <button onclick="changeRep('${code}',${idx},1);document.getElementById('rep-menu').remove()" style="background:#1a3a1a;color:#4ade80;border:1px solid #2a5a2a;border-radius:6px;padding:.4rem .75rem;cursor:pointer;font-size:.85rem;text-align:left">➕ Sumar repetida</button>
-    <button onclick="changeRep('${code}',${idx},-1);document.getElementById('rep-menu').remove()" style="background:#3a1a1a;color:#f87171;border:1px solid #5a2a2a;border-radius:6px;padding:.4rem .75rem;cursor:pointer;font-size:.85rem;text-align:left">➖ Quitar repetida</button>
-    <button onclick="changeRep('${code}',${idx},-99);document.getElementById('rep-menu').remove()" style="background:#2a1a00;color:#fb923c;border:1px solid #5a3a00;border-radius:6px;padding:.4rem .75rem;cursor:pointer;font-size:.85rem;text-align:left">🗑 Borrar todas</button>
+    <button onclick="changeRep('${code}',${idx},1);document.getElementById('rep-menu').remove()" style="background:#1a3a1a;color:#4ade80;border:1px solid #2a5a2a;border-radius:8px;padding:.6rem .75rem;cursor:pointer;font-size:1rem;text-align:left">➕ Sumar repetida</button>
+    <button onclick="changeRep('${code}',${idx},-1);document.getElementById('rep-menu').remove()" style="background:#3a1a1a;color:#f87171;border:1px solid #5a2a2a;border-radius:8px;padding:.6rem .75rem;cursor:pointer;font-size:1rem;text-align:left">➖ Quitar repetida</button>
+    <button onclick="changeRep('${code}',${idx},-99);document.getElementById('rep-menu').remove()" style="background:#2a1a00;color:#fb923c;border:1px solid #5a3a00;border-radius:8px;padding:.6rem .75rem;cursor:pointer;font-size:1rem;text-align:left">🗑 Borrar todas</button>
   `;
 
   // Position near click
@@ -1075,15 +1086,51 @@ function updateRepBadge(code, idx){
   updateStats();
 }
 
-function startLongPress(code,idx,e){
-  cancelLongPress();
-  longPressTimer=setTimeout(()=>{
-    addRep(code,idx,e);
-    if(navigator.vibrate) navigator.vibrate(40);
-  },600);
+// ── TOUCH: doble tap = sumar repetida, long press = menú ──────────────────
+let tapData = { code:null, idx:null, time:0 };
+let touchMoved = false;
+
+function handleTouchStart(code, idx, e){
+  touchMoved = false;
+  // Long press timer para abrir menú (solo si ya es repetida)
+  clearTimeout(longPressTimer);
+  longPressTimer = setTimeout(()=>{
+    if(touchMoved) return;
+    const r = reps[code]?.[String(idx)]||0;
+    if(r > 0){
+      if(navigator.vibrate) navigator.vibrate(40);
+      addRep(code, idx, e);
+    }
+  }, 600);
 }
 
-function cancelLongPress(){ clearTimeout(longPressTimer); }
+function handleTouchMove(e){
+  touchMoved = true;
+  clearTimeout(longPressTimer);
+}
+
+function handleTouchEnd(code, idx, e){
+  clearTimeout(longPressTimer);
+  if(touchMoved) return;
+
+  // Detectar doble tap
+  const now = Date.now();
+  if(tapData.code===code && tapData.idx===idx && (now-tapData.time)<350){
+    // Doble tap!
+    e.preventDefault();
+    tapData = {code:null,idx:null,time:0};
+    if(state[code]?.[idx]){
+      if(!reps[code]) reps[code]={};
+      reps[code][String(idx)] = (reps[code][String(idx)]||0)+1;
+      if(navigator.vibrate) navigator.vibrate(30);
+      saveToDB();
+      updateRepBadge(code,idx);
+    }
+  } else {
+    tapData = {code, idx, time:now};
+    // dejar que el onclick normal maneje el single tap
+  }
+}
 
 function toggle(code,idx){
   if(!state[code])state[code]=Array(TEAMS.find(t=>t.code===code).n).fill(false);
