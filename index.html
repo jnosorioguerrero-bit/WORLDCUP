@@ -159,6 +159,7 @@ header{background:var(--dark);position:sticky;top:0;z-index:100;box-shadow:0 4px
   min-height:22px;height:22px;border-radius:4px;background:#f0f0f0;border:1.5px solid #ddd;
   cursor:pointer;transition:background .1s,transform .1s;display:flex;align-items:center;
   justify-content:center;font-size:9px;font-weight:600;color:#aaa;user-select:none;
+  -webkit-user-select:none;-webkit-touch-callout:none;
 }
 .stk:active{transform:scale(.88)}
 .stk.have{background:var(--cc,var(--blue));border-color:var(--cc,var(--blue));color:rgba(255,255,255,0.8)}
@@ -1113,15 +1114,27 @@ let tapData = { code:null, idx:null, time:0 };
 let touchMoved = false;
 
 function handleTouchStart(code, idx, e){
+  e.preventDefault();
   touchMoved = false;
-  // Long press timer para abrir menú (solo si ya es repetida)
+  const touch = e.touches[0];
+  const touchX = touch.clientX;
+  const touchY = touch.clientY;
   clearTimeout(longPressTimer);
   longPressTimer = setTimeout(()=>{
     if(touchMoved) return;
-    const r = reps[code]?.[String(idx)]||0;
-    if(r > 0){
-      if(navigator.vibrate) navigator.vibrate(40);
-      addRep(code, idx, e);
+    if(!state[code]?.[idx]) return; // solo si tiene la figurita
+    if(navigator.vibrate) navigator.vibrate(40);
+    // Crear evento sintético con coordenadas del touch
+    const fakeE = { preventDefault:()=>{}, clientX:touchX, clientY:touchY };
+    if(!reps[code]) reps[code]={};
+    const current = reps[code][String(idx)]||0;
+    if(current > 0){
+      showRepMenu(code, idx, fakeE);
+    } else {
+      // Primera repetida — marcar directo y vibrar
+      reps[code][String(idx)] = 1;
+      saveToDB();
+      updateRepBadge(code, idx);
     }
   }, 600);
 }
