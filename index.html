@@ -1147,12 +1147,11 @@ function handleTouchMove(e){
 function handleTouchEnd(code, idx, e){
   clearTimeout(longPressTimer);
   if(touchMoved) return;
+  e.preventDefault();
 
-  // Detectar doble tap
   const now = Date.now();
   if(tapData.code===code && tapData.idx===idx && (now-tapData.time)<350){
-    // Doble tap!
-    e.preventDefault();
+    // Doble tap → sumar repetida
     tapData = {code:null,idx:null,time:0};
     if(state[code]?.[idx]){
       if(!reps[code]) reps[code]={};
@@ -1162,8 +1161,9 @@ function handleTouchEnd(code, idx, e){
       updateRepBadge(code,idx);
     }
   } else {
+    // Tap simple → toggle
     tapData = {code, idx, time:now};
-    // dejar que el onclick normal maneje el single tap
+    toggle(code, idx);
   }
 }
 
