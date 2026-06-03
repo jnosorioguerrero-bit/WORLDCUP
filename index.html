@@ -987,9 +987,8 @@ function makeCard(t){
       const r=rep[String(idx)]||0;
       const badge=r>1?`<span class="stk-badge">${r}</span>`:'';
       return `<div class="stk${v?' have':''}${r>0?' repeated':''}" 
-        onclick="toggle('${t.code}',${idx})"
+        onclick="handleStkClick('${t.code}',${idx},event)"
         oncontextmenu="addRep('${t.code}',${idx},event)"
-        ondblclick="doubleTapRep('${t.code}',${idx})"
         ontouchstart="handleTouchStart('${t.code}',${idx},event)"
         ontouchend="handleTouchEnd('${t.code}',${idx},event)"
         ontouchmove="handleTouchMove(event)"
@@ -1084,6 +1083,29 @@ function updateRepBadge(code, idx){
   }
   // update header rep count
   updateStats();
+}
+
+// ── CLICK PC: simple = toggle, doble = sumar repetida ────────────────────
+let pcClickData = { code:null, idx:null, timer:null };
+function handleStkClick(code, idx, e){
+  if(pcClickData.code===code && pcClickData.idx===idx){
+    // Doble click
+    clearTimeout(pcClickData.timer);
+    pcClickData = {code:null, idx:null, timer:null};
+    if(state[code]?.[idx]){
+      if(!reps[code]) reps[code]={};
+      reps[code][String(idx)] = (reps[code][String(idx)]||0)+1;
+      saveToDB();
+      updateRepBadge(code,idx);
+    }
+  } else {
+    // Primer click — esperar si hay segundo
+    clearTimeout(pcClickData.timer);
+    pcClickData = {code, idx, timer: setTimeout(()=>{
+      pcClickData = {code:null, idx:null, timer:null};
+      toggle(code, idx);
+    }, 250)};
+  }
 }
 
 // ── TOUCH: doble tap = sumar repetida, long press = menú ──────────────────
